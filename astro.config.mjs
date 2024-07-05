@@ -4,13 +4,11 @@ import react from "@astrojs/react";
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import vercel from "@astrojs/vercel/serverless";
-import { actions } from 'astro:actions';
-
 
 export default defineConfig({
   integrations: [tailwind(), react({
     include: ["**/react/*"],
-  }), mdx(), sitemap(),actions()],
+  }), mdx(), sitemap()],
   output: 'server',
   adapter: vercel(),
   experimental: {
