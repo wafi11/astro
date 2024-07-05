@@ -51,7 +51,6 @@ const ButtonCollection = ({ blogId }: Props) => {
   const { userProfile } = useUserProfile();
   const [save, setSave] = useState<boolean>(false);
   const [saveId, setSaveId] = useState<string | null>(null);
-  console.log(save)
 
   useEffect(() => {
     const fetchCollectionStatus = async () => {

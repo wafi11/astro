@@ -43,7 +43,7 @@ const Headers = () => {
   const [showing, setShowing] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
-  const { userProfile, error } = useUserProfile();
+  const { userProfile } = useUserProfile();
 
   const handleClick = () => {
     setShowing((prev) => !prev);

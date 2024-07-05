@@ -3,15 +3,19 @@ import tailwind from "@astrojs/tailwind";
 import react from "@astrojs/react";
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import vercel from "@astrojs/vercel/static";
+import vercel from "@astrojs/vercel/serverless";
+import { actions } from 'astro:actions';
 
 
-// https://astro.build/config
 export default defineConfig({
-  site: 'https://fbsite-astro4.vercel.app/',
   integrations: [tailwind(), react({
     include: ["**/react/*"],
-  }), mdx(), sitemap()],
+  }), mdx(), sitemap(),actions()],
+  output: 'server',
+  adapter: vercel(),
+  experimental: {
+    actions: true
+  },
 });
 
 
