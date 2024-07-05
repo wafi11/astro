@@ -8,9 +8,7 @@ const useUserProfile =<T extends UserProfile> () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch('/api/profile', {
-                    method: 'GET'
-                });
+                const response = await fetch('/api/profile');
                 if (!response.ok) {
                     throw new Error('Failed to fetch user profile');
                 }
