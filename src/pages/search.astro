@@ -1,0 +1,65 @@
+---
+import { Image } from "astro:assets";
+import { getEverything } from "../actions/post.astro";
+import Layouts from "../layouts/Layouts.astro";
+import { MdArrowOutward } from "react-icons/md";
+import Content3 from "../components/content/Content3";
+const search = Astro.url.searchParams.get("q") || "";
+const data = await getEverything(search);
+const hasData = data && data.length > 0;
+---
+
+<Layouts
+  title={hasData ? data[0].title : "No Results Found"}
+  description={hasData ? data[0].description : "Try searching for something else"}
+>
+  {
+    hasData ? (
+      <>
+        <h1 class="pt-[100px] px-[70px] text-3xl font-bebas">Search for ....{search}</h1>
+        <section class="pb-10 w-full relative gap-5 px-10 h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {
+            data.map((item) => (
+              <div class=" h-full relative ">
+                <div class="w-full h-[400px] bg-cover bg-center rounded-3xl brightness-50 " style={{ backgroundImage: `url(${item.image})` }}></div>
+                {/* <div class="absolute inset-0  rounded-3xl"></div> */}
+                <div class="absolute inset-0 flex flex-col justify-end p-10 space-y-10 font-blog text-white">
+                  <h1 class="flex gap-4">
+                    {item.category.map((category, index) => (
+                      <p  class="text-md uppercase border-b-2 border-white pb-2">
+                        {category}
+                      </p>
+                    ))}
+                  </h1>
+                  <h1 class="text-sm md:text-md lg:text-xl font-bold ">
+                    {item.title}
+                  </h1>
+                  <div class="flex gap-4">
+                    <button class="border-2 px-4 py-2 rounded-full flex gap-2">
+                      <a href={`/blog/${item.id}`}>View Articles</a>
+                      <MdArrowOutward size={20} />
+                    </button>
+                    <button class="border-2 px-4 py-2 rounded-full bg-gray-100/25">
+                      By {item.author}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </section>
+      </>
+    ) : (
+      <div class="text-center py-[70px] h-screen flex flex-col w-full justify-center items">
+        
+        <h1 class="text-5xl font-blog font-bold">No Results Found</h1>
+        <p class="text-xl font-blog font-bold">
+          Try searching for something else.
+        </p>
+      </div>
+    )
+  }
+</Layouts>
+
+
+

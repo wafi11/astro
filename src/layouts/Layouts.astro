@@ -1,0 +1,17 @@
+---
+import Footer from "../components/utils/Footer";
+import Headers from "../components/utils/header"
+const { title, description, createdAt, updatedDate, image } = Astro.props;
+import BaseHead from "../components/utils/BaseHead.astro";
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <BaseHead title={title}  description={description}/>
+</head>
+<body >
+    <Headers client:load/>
+    <slot />
+    <Footer client:load/>
+</body>
+</html>

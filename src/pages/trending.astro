@@ -1,0 +1,71 @@
+---
+import Content3 from "../components/content/Content3";
+import Layouts from "../layouts/Layouts.astro";
+import { getEverything, postCategory } from "../actions/post.astro";
+const country = Astro.url.searchParams.get('category') || 'general';
+import BannerTrending from '../components/banner/BannerTrending'
+import SliderImage from '../components/sliderImages'
+import type { Data ,Propsing} from "../components/types";
+import {Category} from "../actions/get";
+const category = await postCategory(country)
+const datas = await getEverything(country)
+const categorys = await Category()
+
+
+
+
+---
+
+<Layouts title='Trendings Blog'>
+    <BannerTrending data={datas} categorys={categorys} client:load/>
+        <section class="grid grid-cols-1 z-10  md:grid-cols-3 lg:grid-cols-6 gap-6 container py-10 bg-gray-100 rounded-b-2xl">
+            <div class="col-span-1 md:col-span-3 font-bebas gap-5 flex flex-col">
+                <h1 class=" font-bold text-5xl py-5 flex ">Top Blogs
+                    <span class="h-3 w-3 bg-black rounded-full bottom-0"></span>
+                </h1>
+                <img src={datas[0].image } alt="/" class="rounded-2xl h-[250px] w-full object-cover">
+                <p class="text-md text-gray-400">{new Date(datas[0].createdAt).toLocaleDateString()}</p>
+                <a href=`/blog/${datas[0].id}`>
+                    <h1 class="text-xl font-semibold  font-blog">{datas[0].title}</h1>
+                </a>
+                <p class="text-md font-semibold  font-blog text-gray-400">{datas[0].description}</p>
+                <div class="flex gap-4 items-center pt-5">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 bg-gray-900 rounded-full">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 14a4 4 0 0 1-4-4 4 4 0 1 1 8 0 4 4 0 0 1-4 4zm0 2c4.4 0 8 1.79 8 4v2H4v-2c0-2.21 3.6-4 8-4z"></path>
+                    </svg>
+                    
+                    <p class="text-md font-semibold grid font-bebas tracking-wider text-gray-900">
+                        <span>Written By : </span>
+                        {datas[0].author}
+                    </p>
+                </div>
+            </div>
+            <div class="col-span-1 md:col-span-3   font-blog pt-7 ">
+                <div class="grid  gap-4 pt-[80px] ">
+                    {
+                        datas.slice(1,3).map((item) => (
+                            <a href={`/blog/${item.id}`}>
+                            <div class="grid grid-cols-2 gap-3">
+                            <img src={item.image} alt="/" class="h-full w-full object-cover rounded-2xl" />
+                            <div class="flex flex-col gap-3">
+                            <p class='text-sm text-gray-600 font-bebas pt-2'>{new Date(item.createdAt).toLocaleDateString()}</p>
+                            <h1 class="text-xl  font-bebas">{item.title}</h1>
+                            <h1 class="text-md  font-blog text-gray-500">{item.description}</h1>
+                            </div>
+                            </div>
+                            </a>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+        <section class="pt-[50px] font-bebas container">
+            <Content3 data={datas} title="Blogs Content" client:load/>
+        </section>
+        <SliderImage data={datas} client:load/>
+</Layouts>
+
+
+
+

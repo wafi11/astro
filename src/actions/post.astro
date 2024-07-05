@@ -1,0 +1,56 @@
+---
+import prisma from "../lib/db"
+export async function postCategory(type : string){
+    try {
+        const data = await prisma.blog.findMany({
+          where : {
+            category : {
+                 equals : [type]
+            }
+          }
+        })
+        return data
+    }catch (e){
+        console.log(e)
+        throw new Error('internal Server Erorr')
+    }
+}
+
+
+export async function getEverything(type: string) {
+    try {
+        const data = await prisma.blog.findMany({
+            where: {
+                OR: [
+                    {
+                        category: {
+                            equals : [type],
+                        }
+                    },
+                    {
+                        title: {
+                            contains: type,
+                            mode: 'insensitive'
+                        }
+                    },
+                    {
+                        description: {
+                            contains: type,
+                            mode: 'insensitive'
+                        }
+                    },
+                ]
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+        return data;
+    } catch (e) {
+        console.log(e);
+        throw new Error('internal Server Error');
+    }
+}
+
+
+---

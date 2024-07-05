@@ -1,0 +1,53 @@
+---
+import jwt, { type JwtPayload } from 'jsonwebtoken';
+import prisma from "../lib/db"
+import Button from "../components/utils/Button.astro";
+
+
+export const User = async(token : string) => {
+  try {  
+    const jwtKey = import.meta.env.AUTH_SECRET;
+    if (!token) {
+      throw new Error('Token Not Found');
+    }
+    if (!jwtKey) {
+      throw new Error('JWT key not found in environment variables');
+    }
+
+    const decoded = jwt.verify(token, jwtKey);
+    if (typeof decoded === 'string') {
+      throw new Error('Invalid token payload');
+    }
+    
+    const userId = (decoded as JwtPayload).userId as string;
+    if (!userId) {
+      throw new Error('User ID not found in token');
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        accounts: true,
+        sessions: true,
+        likes: true,
+      },
+    });
+    
+    if (!user) {
+      throw new Error('User not found');
+    }
+    console.log(user)
+    return user
+  }catch(e) {
+    console.log("erorr",e)
+  }
+  }
+
+---
+
+
+
+
+<Button />

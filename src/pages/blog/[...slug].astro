@@ -1,0 +1,68 @@
+---
+
+import type { GetStaticPaths } from "astro";
+import {BlogsData,BlogsDataById, getCommentByBlogId} from "../../actions/get"
+import Layouts from "../../layouts/Layouts.astro";
+import FormatDate from '../../components/utils/FormatDate.astro'
+import { Image } from "astro:assets";
+import Comment from "../../components/utils/Comment";
+export const getStaticPaths = (async() => {
+    const posts = await BlogsData();
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
+}) satisfies GetStaticPaths;
+export const prerender = false
+const allPost = await BlogsData()
+const {slug} = Astro.params
+const posts = await BlogsDataById(slug)
+const comments : any = await getCommentByBlogId(posts[0].id)
+const filterCategory = allPost.filter((item) => (
+    item.category.some((category) => posts.map((items) => items.category.includes(category)))
+))
+---
+
+<Layouts title={posts[0].title}  description={posts[0].description} image={posts[0].image}>
+    <section class="py-[80px] w-full h-screen bg-gray-100 ">
+        {
+           posts.map((post) => (
+            <div class="container flex flex-col  gap-5 font-bebas" >
+                <h1 class="text-[4vw] font-normal leading-none">{post.title}</h1>
+                <p class="text-xl text-left">{post.author} | <FormatDate date={post.createdAt} /></p>
+                <p class="text-xl text-left">{post.description}</p>
+                <div class="flex  gap-4 items-center">
+                {
+                    post.category.map((item) => (
+                        <button class="border-2 border-black rounded-2xl px-3 text-xl">{item}</button>
+                    ))
+                }
+                </div>
+                <Image src={post.image as string} alt="/" width={1000} height={1000} class="h-[400px] flex justify-end w-full  object-cover"/>
+                <a href={`/formblog/edit/${post.id}`}>clikc</a>
+                </div>
+           ))
+        }
+    </section>
+    <section class="container grid grid-cols-1 py-[50px] sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
+        <div class="w-full col-span-1 md:col-span-3 relative">
+           <Comment postId={posts[0].id} data={comments} client:load/>
+        </div>
+        <div class="col-span-1 md:col-span-2 grid w-full border-y-2 border-black" >
+            <h1 class="text-2xl font-bebas ">Related Posts</h1>
+            {
+                filterCategory.slice(1,4).map((post) => (
+                    <div class="grid font-bebas text-md h-fit border-y-2 gap-4 py-2 border-black">
+                        <h1 class="text-2xl">{post.title}</h1>
+                        <p class="text-md font-blog">{post.description}</p>
+                        <Image  src={post.image} alt="/"  width={200} height={200}/>
+                    </div>
+                ))
+            }
+        </div>
+    </section>
+</Layouts>
+
+
+t>
+

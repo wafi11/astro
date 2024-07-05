@@ -1,0 +1,25 @@
+---
+import Layouts from '../../../../layouts/Layouts.astro'
+import FormBlogClient from '../../../../components/utils/Form'
+let initialData;
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+  initialData = { 
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      category: formData.get("category") as string,
+      author : formData.get("author") as string,
+      image : formData.get("image")
+    };
+}
+const {id} = Astro.params
+export interface Props {
+  id: string;
+}
+console.log(id)
+---
+
+
+<Layouts title="Form Blog">
+    <FormBlogClient client:load   initialData={initialData} id={id}/>
+</Layouts>

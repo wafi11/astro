@@ -1,0 +1,23 @@
+---
+import Layouts from "../../layouts/Layouts.astro";
+import Category from "../../components/utils/category"
+import { getEverything } from "../../actions/post.astro";
+
+const search = Astro.url.searchParams.get('query') || 'apple';
+const data = await getEverything(search)
+import Banner from '../../components/banner/Banner'
+import Content4 from "../../components/content/Content4";
+import Content3 from "../../components/content/Content3";
+---
+
+
+<Layouts title={'Astro Blogs'}>
+   <Banner data={data} client:load/>
+   <Category client:load/>
+   <div class="px-10">
+      <Content3 data={data} title={search} client:load>
+    </div>
+   <div class="px-10 pt-[200px]">
+      <Content4 data={data} title={search}/>
+    </div>
+</Layouts>

@@ -1,0 +1,45 @@
+---
+import {format} from 'date-fns'
+const {data}  = Astro.props
+
+const filteredArticles = data.filter((item) => {
+        return item.author  && item.description && item.title && item.url && item.image;
+      });
+---
+
+<div class="grid  grid-cols-1 md:grid-cols-5 gap-5 px-10  h-full pt-[70px]">
+  <div class="col-span-1 md:col-span-3  h-fit w-full border-b-[1px] border-black pb-6">
+    <img alt={filteredArticles[0].image} src={filteredArticles[0].image} width={1000} height={1000} class="object-cover h-[480px] w-full"/>
+    <div class="flex flex-col justify-center gap-5">
+        <div class="flex justify-center gap-4 pt-4 text-lg  blog relative items-center">
+          <p>{filteredArticles[0].author}</p>
+          <button class="w-[5px] h-[5px]  bg-black rounded-full "></button>
+          <p>{format(new Date(filteredArticles[0].createdAt), "dd MMM yyyy")}</p>
+        </div>
+        <a href={`/blog/${filteredArticles[0].id}`}>
+          <p class="text-center blog text-3xl">{filteredArticles[0].title}</p>
+        </a>
+        <p class="text-md "> {filteredArticles[0].description}</p>
+    </div>
+    <div class="flex justify-between pt-5">
+      <button class="text-black border-2 border-gray-300 hover:text-white hover:bg-gray-400 px-3 py-2">
+        Read Now
+      </button>
+      <button class="text-black blog px-3 py-2">
+        <span class="text-gray-400">
+          {50}
+          </span>
+        Comments
+      </button>
+    </div>
+  </div>
+  <div class="col-span-1 md:col-span-2 h-fit w-full ">
+    <div class="my-5 pt-5">
+      <h1 class="text-2xl bebas font-semibold bg-black text-white w-fit p-2 ">
+        Other Post
+      </h1>
+    </div>
+    <img alt={filteredArticles[4].image} src={filteredArticles[1].image} width={1000} height={1000} class="object-cover h-[200px] w-full"/>
+      <h1 class="text-4xl  blog py-5 w-full text-start">{filteredArticles[1].title}</h1>
+      <p class="text-md "> {filteredArticles[1].description}</p>
+  </div>

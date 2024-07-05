@@ -1,0 +1,130 @@
+---
+import { Image } from "astro:assets";
+import prisma from "../lib/db";
+import Layouts from "../layouts/Layouts.astro";
+const datas = await prisma.user.findMany()
+console.log(datas)
+---
+
+<Layouts title="Login Page">
+  <section
+    class="grid grid-cols-1 md:grid-cols-2 pt-[70px] h-screen container py-10 justify-center items-center"
+  >
+    <div class="flex justify-center items-center bg-gray-300 rounded-l-2xl">
+      <Image
+        src="/images.avif"
+        alt="/"
+        height={200}
+        width={200}
+        class="w-full h-[500px] rounded-3xl"
+      />
+    </div>
+    <form
+      id="Form"
+      class="bg-gray-300 p-8 w-full flex flex-col justify-center items-center h-[500px]"
+    >
+      <div class="w-full mb-4">
+        <label for="name" class="block text-black mb-2">Username:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          class="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+      <div class="w-full mb-4">
+        <label for="email" class="block text-black mb-2">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+      <div class="w-full mb-4">
+        <label for="password" class="block text-black mb-2">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          class="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+      <div class="w-full mb-4">
+        <label for="image" class="block text-black mb-2">Image:</label>
+        <input
+          type="file"
+          id="image"
+          name="image"
+          required
+          class="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+        >Sign In</button
+      >
+      <p id="error-message" class="mt-4 text-red-500"></p>
+    </form>
+  </section>
+</Layouts>
+
+<script>
+  import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+  import { storage } from "../lib/Config";
+  import { actions } from "astro:actions";
+
+  const uploadImage = async (file: File) => {
+    try {
+      const storageRef = ref(storage, `images/${file.name}`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
+  };
+
+  document
+    .getElementById("Form")!
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); 
+
+      const form = event.target as HTMLFormElement; // Cast event.target to HTMLFormElement
+      const formData = new FormData(form);
+      const formEntries = Object.fromEntries(formData.entries());
+
+      console.log(formData.get("email"));
+
+      let imageUrl: string | null = null;
+      const imageFile = formData.get("image")
+
+      if (imageFile && imageFile instanceof File) {
+        imageUrl = await uploadImage(imageFile);
+        formData.set("image", imageUrl)
+        console.log(imageUrl);
+      }
+
+      if (imageUrl) {
+        formEntries.image = imageUrl;
+      }
+
+      try {
+        const req = await fetch('/api/register',{
+          method : 'POST',
+          body : formData
+        }) 
+        if(!req?.ok){
+          console.error("Error during registration:");
+        }
+        console.log("Registration successful:");
+      } catch (error) {
+        console.error("Error during registration:", error);
+      }
+    });
+</script>

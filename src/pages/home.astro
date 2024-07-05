@@ -1,0 +1,27 @@
+---
+import Layouts from "../layouts/Layouts.astro";
+import ContentMid from "../components/content/ContentMid"
+import Content3 from "../components/content/Content3";
+import Content4 from "../components/content/Content4";
+import Content1 from "../components/content/Content1.astro";
+import { BlogsData,Popular,Trending } from "../actions/get";
+const data = await BlogsData()
+const populer = await Popular()
+const Trendings = await Trending()
+---
+
+
+<Layouts title="Home Page"    titles={"Home"}>
+      <Content1 data={data} title="Data"  title={"Home Page"}/>
+      <ContentMid data={populer} client:load/>  
+    <section class="px-10">
+      <Content3 data={populer} title="Hot News" client:load>
+    </section>
+    <section class="px-10 pt-[200px]">
+      <Content4 data={Trendings} title="Trending"/>
+    </section>
+</Layouts>
+
+
+
+

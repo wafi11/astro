@@ -1,0 +1,73 @@
+---
+import BannerPopular from '../components/banner/BannerPopular'
+import Layouts from "../layouts/Layouts.astro";
+import { Image } from "astro:assets";
+import { MdArrowOutward } from "react-icons/md";
+import '../styles/global.css'
+import ContentMid from "../components/content/ContentMid";
+import Content3 from "../components/content/Content3";
+import Content4 from "../components/content/Content4";
+import { Trending } from '../actions/get';
+const data  = await Trending()
+---
+
+<Layouts title={'Popular Page '} data={data}>
+  <section
+        class="pt-[70px] w-full relative sm:h-fit  h-screen py-10 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 px-10
+           "
+      >
+        <div class=" col-span-1 md:col-span-2 lg:col-span-4 relative h-full ">
+          <Image
+            src={data[1].image}
+            alt="/"
+            width={400}
+            height={400}
+            class="w-full rounded-3xl object-cover h-[600px] brightness-50"
+          />
+          <div class="absolute bottom-10 w-fit lg:w-[800px] space-y-10 font-blog px-10 text-white">
+            <h1 class="flex gap-4  space-x-4">
+              {data[1].category.map((item) => (
+                <p class="space-x-4 text-md uppercase border-b-2 border-white pb-2">
+                  {item}
+                </p>
+              ))}
+            </h1>
+            <h1 class="text-md md:text-3xl lg:text-5xl  font-bold ">
+              {data[1].title}
+            </h1>
+            <div class="flex gap-4">
+              <button class="border-2 px-4 py-2 rounded-full flex gap-2 ">
+                <a href={`/blog/${data[1].id}`}>View Articles</a>
+                <MdArrowOutward size={20} />
+              </button>
+              <button class="border-2 px-4 py-2 rounded-full  bg-gray-100/25">
+                By {data[1].author}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-span-1  grid grid-rows-2 w-full h-full items-center container md:px-3 gap-2">
+          {data.slice(2, 4).map((item) => (
+            <a href={`/blog/${item.id}`} class="relative  w-full h-full">
+              <Image
+                src={item.image}
+                alt="/"
+                width={400}
+                height={500}
+                class="rounded-2xl h-full w-full  object-cover brightness-75"
+              />
+              <p class="absolute bottom-10 text-xl font-medium px-5 text-white">
+                {item.title}
+              </p>
+            </a>
+          ))}
+        </div>
+      </section>
+    <ContentMid data={data} />
+  <section class="px-10">
+      <Content3 data={data} title="Popular" client:load/>
+    </section>
+  <section class="px-10 py-[50px]">
+      <Content4 data={data} title="Popular"/>
+    </section>
+</Layout>

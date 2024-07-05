@@ -1,0 +1,89 @@
+---
+const countries = [
+    { code: 'ae', name: 'UAE' },
+    { code: 'ar', name: 'Argentina' },
+    { code: 'at', name: 'Austria' },
+    { code: 'au', name: 'Australia' },
+    { code: 'be', name: 'Belgium' },
+    { code: 'bg', name: 'Bulgaria' },
+    { code: 'br', name: 'Brazil' },
+    { code: 'ca', name: 'Canada' },
+    { code: 'ch', name: 'Switzerland' },
+    { code: 'cn', name: 'China' },
+    { code: 'co', name: 'Colombia' },
+    { code: 'cu', name: 'Cuba' },
+    { code: 'de', name: 'Germany' },
+    { code: 'eg', name: 'Egypt' },
+    { code: 'fr', name: 'France' },
+    { code: 'gb', name: 'UK' },
+    { code: 'gr', name: 'Greece' },
+    { code: 'hk', name: 'HongKong' },
+    { code: 'hu', name: 'Hungary' },
+    { code: 'id', name: 'Indonesia' },
+    { code: 'ie', name: 'Ireland' },
+    { code: 'il', name: 'Israel' },
+    { code: 'in', name: 'India' },
+    { code: 'it', name: 'Italy' },
+    { code: 'jp', name: 'Japan' },
+    { code: 'kr', name: 'Korea' },
+    { code: 'lt', name: 'Lithuania' },
+    { code: 'lv', name: 'Latvia' },
+    { code: 'ma', name: 'Morocco' },
+    { code: 'mx', name: 'Mexico' },
+    { code: 'my', name: 'Malaysia' },
+    { code: 'ng', name: 'Nigeria' },
+    { code: 'nl', name: 'Netherlands' },
+    { code: 'no', name: 'Norway' },
+    { code: 'nz', name: 'NewZealand' },
+    { code: 'ph', name: 'Philippines' },
+    { code: 'pl', name: 'Poland' },
+    { code: 'pt', name: 'Portugal' },
+    { code: 'ro', name: 'Romania' },
+    { code: 'rs', name: 'Serbia' },
+    { code: 'ru', name: 'Russia' },
+    { code: 'sa', name: 'SaudiArabia' },
+    { code: 'se', name: 'Sweden' },
+    { code: 'sg', name: 'Singapore' },
+    { code: 'si', name: 'Slovenia' },
+    { code: 'sk', name: 'Slovakia' },
+    { code: 'th', name: 'Thailand' },
+    { code: 'tr', name: 'Turkey' },
+    { code: 'tw', name: 'Taiwan' },
+    { code: 'ua', name: 'Ukraine' },
+    { code: 'us', name: 'US' },
+    { code: 've', name: 'Venezuela' },
+    { code: 'za', name: 'Africa' },
+];
+---
+
+<div class="flex items-center text-center overflow-x-auto py-3 gap-10 border-y-[2px] border-black">
+    {countries.map(country => (
+        <div class="hover:bg-neutral-900 bg-neutral-900 text-white w-full px-3 py-1 rounded-lg border-2 border-black">
+            <button class="country-button" data-code={country.code}>{country.name}</button>
+        </div>
+    ))}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.country-button');
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const target = event.target as HTMLElement;
+                const countryCode = target.getAttribute('data-code');
+                handleClick(countryCode);
+            });
+        });
+    });
+
+    function handleClick(type) {
+        const params = new URLSearchParams(window.location.search);
+        if (type) {
+            params.set('country', type);
+        } else {
+            params.delete('country');
+        }
+        window.location.search = params.toString();
+    }
+</script>
