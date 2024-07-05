@@ -12,11 +12,6 @@ export default defineConfig({
   integrations: [tailwind(), react({
     include: ["**/react/*"],
   }), mdx(), sitemap()],
-  output: 'server',
-  adapter: vercel(),
-  experimental: {
-    actions: true
-  },
 });
 
 
